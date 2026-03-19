@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vitality Medicine of NY — Lab Referrals</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Lato', sans-serif;
+    background: #0e2018;
+    color: #f0faf4;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    overflow-x: hidden;
+  }
+
+  /* Background texture */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(26,107,60,0.25) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(26,107,60,0.15) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 560px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.7s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* LOGO AREA */
+  .logo-area {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .logo-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 16px;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+  }
+  .logo-area h1 {
+    font-size: 26px;
+    font-weight: 900;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+    line-height: 1.2;
+  }
+  .logo-area p {
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6db88a;
+    margin-top: 8px;
+  }
+  .divider {
+    width: 40px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #1a6b3c, transparent);
+    margin: 16px auto 0;
+  }
+
+  /* CARDS */
+  .cards { display: flex; flex-direction: column; gap: 16px; }
+
+  .card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 28px 32px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26,107,60,0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.25s;
+  }
+  .card:hover {
+    border-color: rgba(109,184,138,0.4);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(109,184,138,0.2);
+  }
+  .card:hover::before { opacity: 1; }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .card-icon.quest { background: rgba(37,99,197,0.2); border: 1px solid rgba(37,99,197,0.3); }
+  .card-icon.labcorp { background: rgba(220,38,38,0.15); border: 1px solid rgba(220,38,38,0.25); }
+
+  .card-text { flex: 1; position: relative; z-index: 1; }
+  .card-text h2 {
+    font-size: 17px;
+    font-weight: 900;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+  .card-text p {
+    font-size: 12px;
+    color: #6db88a;
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  .card-arrow {
+    font-size: 20px;
+    color: rgba(255,255,255,0.2);
+    transition: all 0.25s;
+    position: relative;
+    z-index: 1;
+  }
+  .card:hover .card-arrow {
+    color: #6db88a;
+    transform: translateX(4px);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 10.5px;
+    color: rgba(255,255,255,0.2);
+    letter-spacing: 0.05em;
+    line-height: 1.8;
+  }
+  .footer strong { color: rgba(255,255,255,0.35); font-weight: 700; }
+
+  /* PASSWORD OVERLAY */
+  #authOverlay {
+    position: fixed;
+    inset: 0;
+    background: #0e2018;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    font-family: 'Lato', sans-serif;
+  }
+  .auth-box {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 48px 48px 40px;
+    text-align: center;
+    max-width: 360px;
+    width: 90%;
+    animation: fadeUp 0.5s ease both;
+  }
+  .auth-box .icon { font-size: 36px; margin-bottom: 16px; display: block; }
+  .auth-box h2 { font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 4px; }
+  .auth-box p { font-size: 12px; color: #6db88a; margin-bottom: 28px; letter-spacing: 0.05em; }
+  .auth-box input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 15px;
+    font-family: 'Lato', sans-serif;
+    color: #fff;
+    margin-bottom: 12px;
+    outline: none;
+    text-align: center;
+    letter-spacing: 0.15em;
+    transition: border 0.2s;
+  }
+  .auth-box input:focus { border-color: #1a6b3c; }
+  .auth-box input::placeholder { letter-spacing: 0.05em; color: rgba(255,255,255,0.25); }
+  .auth-box button {
+    width: 100%;
+    background: #1a6b3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 13px;
+    font-size: 14px;
+    font-weight: 700;
+    font-family: 'Lato', sans-serif;
+    cursor: pointer;
+    transition: background 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .auth-box button:hover { background: #155d33; }
+  .auth-err { color: #f87171; font-size: 12px; margin-top: 10px; display: none; }
+</style>
+</head>
+<body>
+
+<!-- PASSWORD OVERLAY -->
+<div id="authOverlay">
+  <div class="auth-box">
+    <span class="icon"></span>
+    <h2>Vitality Medicine of NY</h2>
+    <p>STAFF ACCESS — LAB REFERRALS</p>
+    <input id="passInput" type="password" placeholder="Enter password" autocomplete="off">
+    <button onclick="checkPass()">Enter</button>
+    <p class="auth-err" id="passErr">Incorrect password. Try again.</p>
+  </div>
+</div>
+
+<div class="container">
+  <div class="logo-area">
+    <span class="logo-icon" style="display:none"></span>
+    <h1>Vitality Medicine of NY</h1>
+    <p>Lab Referral Portal</p>
+    <div class="divider"></div>
+  </div>
+
+  <div class="cards">
+    <a class="card" href="index.html">
+      <div class="card-icon quest">🔬</div>
+      <div class="card-text">
+        <h2>Quest Diagnostics</h2>
+        <p>Account #48052317 &nbsp;·&nbsp; Electronic Lab Referral</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+
+    <a class="card" href="Labcorp_Lab_Referral_Electronic.html">
+      <div class="card-icon labcorp">🧪</div>
+      <div class="card-text">
+        <h2>Labcorp</h2>
+        <p>Account #31257350 &nbsp;·&nbsp; Electronic Lab Referral</p>
+      </div>
+      <div class="card-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <strong>Vitality Medicine of New York</strong><br>
+    800 2nd Ave, 9th Flr · New York, NY 10017<br>
+    984 N. Broadway Ste 510 · Yonkers, NY 10701<br>
+    1250 Waters Place, Tower 1 · Bronx, NY 10461
+  </div>
+</div>
+
+<script>
+  (function() {
+    const PASS = '2026';
+    if (sessionStorage.getItem('vmny_auth') === PASS) {
+      document.getElementById('authOverlay').style.display = 'none';
+    }
+    document.getElementById('passInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') checkPass();
+    });
+  })();
+
+  function checkPass() {
+    const PASS = '2026';
+    const val = document.getElementById('passInput').value;
+    if (val === PASS) {
+      sessionStorage.setItem('vmny_auth', PASS);
+      document.getElementById('authOverlay').style.display = 'none';
+    } else {
+      document.getElementById('passErr').style.display = 'block';
+      document.getElementById('passInput').value = '';
+      document.getElementById('passInput').focus();
+    }
+  }
+</script>
+</body>
+</html>
