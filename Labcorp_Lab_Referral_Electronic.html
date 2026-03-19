@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Labcorp – Lab Referral | Vitality Medicine of NY</title>
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a3a2a;
+    --ink-light: #4a6a57;
+    --accent: #1a6b3c;
+    --accent-soft: #d4edda;
+    --green: #1a6b3c;
+    --green-soft: #d4edda;
+    --red: #dc2626;
+    --border: #b6d4c0;
+    --bg: #f4faf6;
+    --white: #ffffff;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 4px 16px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Lato', sans-serif; background: var(--bg); color: var(--ink); font-size: 13px; }
+
+  @media print {
+    body { background: white; font-size: 11px; }
+    .no-print { display: none !important; }
+    .card { box-shadow: none; border: 1px solid #ccc; page-break-inside: avoid; }
+    .page { max-width: 100%; padding: 10px; }
+    .header-bar { background: #1a3a2a !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .checked-badge { background: #1a6b3c !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+
+  .page { max-width: 960px; margin: 0 auto; padding: 24px 16px; }
+
+  .header-bar {
+    background: var(--ink);
+    color: white;
+    border-radius: 12px 12px 0 0;
+    padding: 20px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .header-bar .logo-area h1 { font-family: 'Lato', sans-serif; font-weight: 900; font-size: 20px; letter-spacing: 0.01em; }
+  .header-bar .logo-area p { font-size: 11px; color: #a7d4b8; margin-top: 2px; }
+  .header-bar .acct { font-size: 11px; background: rgba(255,255,255,0.12); padding: 6px 14px; border-radius: 20px; }
+  .header-bar .acct span { font-weight: 600; color: #fbbf24; }
+
+  .notice {
+    background: #fffbeb;
+    border-left: 4px solid #f59e0b;
+    padding: 10px 16px;
+    font-size: 11.5px;
+    color: #78350f;
+  }
+
+  .patient-bar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-bottom: none;
+    padding: 16px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  .field-group label { display: block; font-size: 10px; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .field-group input {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    font-size: 13px;
+    font-family: 'Lato', sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    transition: border 0.2s;
+  }
+  .field-group input:focus { outline: none; border-color: var(--accent); background: white; }
+
+  .physician-bar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-bottom: none;
+    padding: 14px 28px;
+  }
+  .physician-bar .physician-row { display: flex; gap: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .sig-field { flex: 1; min-width: 220px; }
+  .sig-field label { display: block; font-size: 10px; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+  .sig-field input {
+    width: 100%;
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    padding: 4px 0;
+    font-family: 'Lato', sans-serif;
+    font-size: 14px;
+    background: transparent;
+    color: var(--ink);
+  }
+  .sig-field input:focus { outline: none; border-bottom-color: var(--accent); }
+  .sig-field .sub { font-size: 10px; color: var(--ink-light); margin-top: 2px; }
+
+  .sig-canvas-wrap { margin-top: 4px; position: relative; }
+  .sig-canvas-wrap canvas {
+    border-bottom: 1.5px solid var(--border);
+    display: block;
+    cursor: crosshair;
+    background: transparent;
+    width: 100%;
+    height: 54px;
+  }
+  .sig-clear-btn {
+    position: absolute; top: 2px; right: 0;
+    font-size: 10px; color: var(--ink-light);
+    background: none; border: none; cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    text-decoration: underline;
+  }
+  .sig-clear-btn:hover { color: var(--red); }
+
+  .instructions-box {
+    margin-top: 12px;
+    background: var(--accent-soft);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 11.5px;
+    color: #1a3a2a;
+    line-height: 1.6;
+  }
+  .instructions-box strong { font-weight: 700; }
+
+  .toolbar {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 1px solid #e5e7eb;
+    padding: 10px 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .toolbar-label { font-size: 11px; font-weight: 700; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.05em; margin-right: 4px; }
+  .btn {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'Lato', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: all 0.15s;
+  }
+  .btn-outline { border-color: var(--border); background: white; color: var(--ink); }
+  .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+  .btn-green { background: var(--green); color: white; border-color: var(--green); }
+  .btn-green:hover { background: #15803d; }
+  .btn-accent { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-accent:hover { background: #155d33; }
+  .btn-red { background: white; color: var(--red); border-color: #fca5a5; }
+  .btn-red:hover { background: #fef2f2; }
+  .counter-badge { background: var(--accent); color: white; border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 700; }
+
+  .sections-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .section-col { border: 1px solid var(--border); border-top: none; }
+  .section-col:first-child { border-right: none; }
+
+  .section-header {
+    background: var(--ink);
+    color: white;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .test-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 14px;
+    border-bottom: 1px solid #f3f4f6;
+    transition: background 0.12s;
+    cursor: pointer;
+    user-select: none;
+  }
+  .test-item:hover { background: #e8f5ee; }
+  .test-item.checked { background: var(--green-soft); }
+  .test-item.checked .test-name { color: var(--green); font-weight: 700; }
+
+  .check-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    background: white;
+  }
+  .test-item.checked .check-box { background: var(--green); border-color: var(--green); }
+  .icd-item.checked .check-box { background: var(--green); border-color: var(--green); }
+  .check-mark { color: white; font-size: 11px; display: none; }
+  .test-item.checked .check-mark { display: block; }
+  .icd-item.checked .check-mark { display: block; }
+
+  .test-code { font-size: 10px; color: var(--ink-light); font-weight: 500; min-width: 52px; }
+  .test-name { font-size: 12px; color: var(--ink); flex: 1; line-height: 1.3; }
+  .test-name small { display: block; font-size: 10px; color: var(--ink-light); font-weight: 400; }
+  .test-badge { font-size: 9px; background: #fef9c3; color: #713f12; padding: 1px 6px; border-radius: 10px; font-weight: 700; flex-shrink: 0; }
+  .test-badge-blue { font-size: 9px; background: #dbeafe; color: #1e40af; padding: 1px 6px; border-radius: 10px; font-weight: 700; flex-shrink: 0; }
+
+  .icd-section {
+    border: 1px solid var(--border);
+    border-top: none;
+    background: white;
+  }
+  .icd-header {
+    background: #2d5a3d;
+    color: white;
+    padding: 8px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .icd-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .icd-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 6px 10px;
+    border-bottom: 1px solid #f3f4f6;
+    border-right: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: background 0.12s;
+    user-select: none;
+  }
+  .icd-item:hover { background: #e8f5ee; }
+  .icd-item.checked { background: var(--green-soft); }
+  .icd-item.checked .icd-code { color: var(--green); }
+  .icd-item .check-box { width: 15px; height: 15px; margin-top: 1px; flex-shrink: 0; }
+  .icd-code { font-size: 10px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .icd-desc { font-size: 10.5px; color: var(--ink); line-height: 1.3; }
+
+  .form-footer {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+  .footer-note { font-size: 10.5px; color: var(--ink-light); max-width: 480px; line-height: 1.5; }
+  .btn-print { padding: 8px 22px; font-size: 13px; }
+  .selected-summary {
+    background: var(--green-soft);
+    border: 1px solid #86efac;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header-bar">
+    <div class="logo-area">
+      <h1>Labcorp — Lab Referral</h1>
+      <p>Vitality Medicine of NY &nbsp;|&nbsp; Electronic Request Form</p>
+    </div>
+    <div class="acct">Account # <span>31257350</span></div>
+  </div>
+
+  <div class="notice">
+    <strong>Important:</strong> Please make sure this laboratory participates with your health insurance company. <em>Vitality Medicine of New York is not responsible for any fees incurred to process this testing.</em> Please ask the laboratory for details on your fee responsibility for the tests ordered below.
+  </div>
+
+  <div class="patient-bar">
+    <div class="field-group">
+      <label>Date</label>
+      <input type="date" id="refDate">
+    </div>
+    <div class="field-group" style="grid-column: span 2;">
+      <label>Patient Name</label>
+      <input type="text" placeholder="Last, First Middle">
+    </div>
+    <div class="field-group">
+      <label>Date of Birth</label>
+      <input type="date" id="dob">
+    </div>
+  </div>
+
+  <div class="physician-bar">
+    <div class="physician-row">
+      <div class="sig-field">
+        <label>Ordering Physician Signature — Sireen Gopal, MD</label>
+        <div class="sig-canvas-wrap">
+          <canvas id="sigCanvasGopal" width="400" height="54"></canvas>
+          <button class="sig-clear-btn no-print" onclick="clearSig('sigCanvasGopal')">Clear</button>
+        </div>
+        <div class="sub">NPI: 1720183551</div>
+      </div>
+      <div class="sig-field">
+        <label>Nurse Practitioner Signature — Ashley Osborne, FNP</label>
+        <div class="sig-canvas-wrap">
+          <canvas id="sigCanvasOsborne" width="400" height="54"></canvas>
+          <button class="sig-clear-btn no-print" onclick="clearSig('sigCanvasOsborne')">Clear</button>
+        </div>
+        <div class="sub">NPI: 1578219366</div>
+      </div>
+    </div>
+    <div class="instructions-box">
+      <strong>Patient Instructions:</strong> Please schedule your appointment between the hours of 7 AM–9 AM (preferred, not mandatory). Please avoid seafood 48 hours before testing. Heavy metal testing/24-hr urine also included — you can receive collection devices at the collection center.
+    </div>
+  </div>
+
+  <div class="toolbar no-print">
+    <span class="toolbar-label">Quick Actions</span>
+    <button class="btn btn-green" onclick="selectAll()">✓ Select All</button>
+    <button class="btn btn-outline" onclick="selectSection('labs')">Labs Only</button>
+    <button class="btn btn-outline" onclick="selectSection('icd')">ICD Only</button>
+    <button class="btn btn-red" onclick="clearAll()">✕ Clear All</button>
+    <span class="counter-badge" id="selCount">0 selected</span>
+  </div>
+
+  <div class="sections-wrap">
+    <!-- LEFT COLUMN -->
+    <div class="section-col">
+      <div class="section-header">Laboratory Tests — Panel A</div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">322000</span><span class="test-name">Comp Met Panel (14)</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">005009</span><span class="test-name">CBC w/Differential/Platelet</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">213660</span><span class="test-name">Insulin and C-Peptide Ratio</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">123525</span><span class="test-name">Lipid Panel with Diabetes Risk Index</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">261742</span><span class="test-name">ApoliB + CRP C + DRI + GlycA + Lp</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001453</span><span class="test-name">Hemoglobin A1c</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001362</span><span class="test-name">Creatine Kinase Total</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">706994</span><span class="test-name">Homocyst(e)ine</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">835040</span><span class="test-name">Fatty Acid Balance <span class="test-badge">Need 1mL Serum</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">081950</span><span class="test-name">Vit D, 25-Hydroxy</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">706961</span><span class="test-name">Methylmalonic Acid</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">000810</span><span class="test-name">Vit B12 / Folate</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001057</span><span class="test-name">Uric Acid</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">324741</span><span class="test-name">Iron, TIBC, Ferritin</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001805</span><span class="test-name">Vitamin C</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">080283</span><span class="test-name">Magnesium (RBC)</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001800</span><span class="test-name">Zinc</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001586</span><span class="test-name">Copper</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">081034</span><span class="test-name">Selenium</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">070034</span><span class="test-name">Iodine Serum</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">121200</span><span class="test-name">Vitamin K</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001396</span><span class="test-name">Amylase</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001404</span><span class="test-name">Lipase</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">104018</span><span class="test-name">Cortisol AM</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">005215</span><span class="test-name">Sedimentation Rate</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">007700</span><span class="test-name">Glutathione, Total</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">002139</span><span class="test-name">Carcinoembryonic Antigen (CEA) <span class="test-badge">Female</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">002303</span><span class="test-name">Cancer Antigen (CA) 125</span></div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="section-col">
+      <div class="section-header">Laboratory Tests — Panel B</div>
+      <!-- THYROID -->
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004259</span><span class="test-name">TSH</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">001974</span><span class="test-name">Free T4</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">010389</span><span class="test-name">Free T3</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">070104</span><span class="test-name">Reverse T3</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">006685</span><span class="test-name">Thyroglobulin Ab</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">006676</span><span class="test-name">Thyroid Peroxidase (TPO) Ab</span></div>
+      <!-- HORMONES -->
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">500183</span><span class="test-name">AMH</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">144980</span><span class="test-name">Testosterone Free Direct</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004226</span><span class="test-name">Testosterone Total</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">082016</span><span class="test-name">Sex Hormone Binding Globulin (SHBG)</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004283</span><span class="test-name">LH</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004309</span><span class="test-name">FSH</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004465</span><span class="test-name">Prolactin</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004515</span><span class="test-name">Estradiol</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004020</span><span class="test-name">DHEA-Sulfate</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">004317</span><span class="test-name">Progesterone</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">010363</span><span class="test-name">IGF-1</span></div>
+      <!-- ALLERGY / NEURO / OTHER -->
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">608005</span><span class="test-name">Allergen Profile</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">125536</span><span class="test-name">ApoE AD Risk (Alzheimer's)</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">505725</span><span class="test-name">Beta-Amyloid Ratio 42/40</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">480772</span><span class="test-name">PSA, Total &amp; Free <span class="test-badge">Males Only</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">164226</span><span class="test-name">Lyme Antibodies</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">164705</span><span class="test-name">Tickborne Disease</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">164947</span><span class="test-name">ANA by IFA</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">006502</span><span class="test-name">Rheumatoid Factor</span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">165126</span><span class="test-name">Celiac Panel</span></div>
+      <!-- HEAVY METALS -->
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">085324</span><span class="test-name">Mercury <span class="test-badge">Heavy Metal</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">007245</span><span class="test-name">Arsenic <span class="test-badge">Heavy Metal</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">071548</span><span class="test-name">Aluminum <span class="test-badge">Heavy Metal</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">007046</span><span class="test-name">Heavy Metal Urine Profile I <span class="test-badge">Heavy Metal</span></span></div>
+      <div class="test-item" onclick="toggle(this)" data-group="labs"><div class="check-box"><span class="check-mark">✓</span></div><span class="test-code">007625</span><span class="test-name">Lead Whole Blood Adult <span class="test-badge">Heavy Metal</span></span></div>
+    </div>
+  </div>
+
+  <!-- ICD-10 CODES -->
+  <div class="icd-section">
+    <div class="icd-header">ICD-10 Diagnosis Codes — Select All That Apply</div>
+    <div class="icd-grid">
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R63.5</div><div class="icd-desc">Abnormal weight gain</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R53.82</div><div class="icd-desc">Other malaise and fatigue</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">D15.9</div><div class="icd-desc">Vitamin B12 / Anemia</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">E66.9</div><div class="icd-desc">Obesity, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R73.03</div><div class="icd-desc">Prediabetes</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R73.09</div><div class="icd-desc">Type 2 DM without complication</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">E55.9</div><div class="icd-desc">Vitamin D deficiency, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">N95.1</div><div class="icd-desc">Menopausal disorder</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">N94.3</div><div class="icd-desc">PMS</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">A04.9</div><div class="icd-desc">Bacterial intestinal infection, unsp.</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">H81.4</div><div class="icd-desc">Vertigo of central origin</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">F41.9</div><div class="icd-desc">Anxiety disorder, specified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">F32.9</div><div class="icd-desc">Major depression</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">G47.0</div><div class="icd-desc">Insomnia due to medical condition</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R42</div><div class="icd-desc">Dizziness and giddiness</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">J01.90</div><div class="icd-desc">Sinusitis, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">E73.9</div><div class="icd-desc">Lactose intolerance</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R19.7</div><div class="icd-desc">Diarrhea, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">K90.41</div><div class="icd-desc">Non-celiac gluten sensitivity</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R35.0</div><div class="icd-desc">Frequency of micturition</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R41.9</div><div class="icd-desc">Cognitive function symptoms/signs</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R25.2</div><div class="icd-desc">Cramp and spasm</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">G47.30</div><div class="icd-desc">Sleep apnea, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">K58.8</div><div class="icd-desc">Irritable bowel syndrome</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">E78.5</div><div class="icd-desc">Hyperlipidemia, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">I10</div><div class="icd-desc">Essential Hypertension</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">L40.9</div><div class="icd-desc">Psoriasis</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">K21.9</div><div class="icd-desc">Gastroesophageal reflux</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">M79.7</div><div class="icd-desc">Fibromyalgia</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">M13.80</div><div class="icd-desc">Other specified arthritis</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R14.0</div><div class="icd-desc">Abdominal distension</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R51.9</div><div class="icd-desc">Headache</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">E56.01</div><div class="icd-desc">Deficiency of Vitamin K</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R12</div><div class="icd-desc">Heartburn</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">L65.9</div><div class="icd-desc">Nonscarring hair loss</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">G89.4</div><div class="icd-desc">Chronic Pain Syndrome</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">E61.2</div><div class="icd-desc">Magnesium deficiency</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">M26.69</div><div class="icd-desc">Disorders of temp mandibular jt</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">D50.9</div><div class="icd-desc">Iron deficiency anemia</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">J45.909</div><div class="icd-desc">Asthma, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">D89.89</div><div class="icd-desc">Other immune disorders</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">M35.9</div><div class="icd-desc">Autoimmune disease, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R76.8</div><div class="icd-desc">Abnormal immunologic findings</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R79.82</div><div class="icd-desc">Elevated CRP</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">G30.9</div><div class="icd-desc">Alzheimer's disease</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">F02.80</div><div class="icd-desc">Dementia w/o behavioral disturbance</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R79.89</div><div class="icd-desc">Other abnormal blood chemistry</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">T78.40XA</div><div class="icd-desc">Allergy, unspecified</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">R41.3</div><div class="icd-desc">Memory loss</div></div></div>
+      <div class="icd-item" onclick="toggle(this)" data-group="icd"><div class="check-box"><span class="check-mark">✓</span></div><div><div class="icd-code">G31.84</div><div class="icd-desc">Mild cognitive impairment</div></div></div>
+    </div>
+  </div>
+
+  <div class="form-footer">
+    <div class="footer-note">
+      This form is for internal use by Vitality Medicine of NY. Once completed, print or save as PDF to submit with the patient to Labcorp. Selections are highlighted in green when active.
+    </div>
+    <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+      <span id="footerCount" class="selected-summary" style="display:none">0 items selected</span>
+      <button class="btn btn-accent btn-print no-print" onclick="window.print()">🖨 Print / Save PDF</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  // ── PASSWORD PROTECTION ──────────────────────────────────────────
+  (function() {
+    const PASS = '2026';
+    const stored = sessionStorage.getItem('vmny_auth');
+    if (stored !== PASS) {
+      const overlay = document.createElement('div');
+      overlay.id = 'authOverlay';
+      overlay.style.cssText = 'position:fixed;inset:0;background:#1a3a2a;display:flex;align-items:center;justify-content:center;z-index:9999;font-family:Lato,sans-serif;';
+      overlay.innerHTML = `
+        <div style="background:white;border-radius:14px;padding:40px 48px;text-align:center;max-width:360px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.3);">
+          <div style="font-size:28px;margin-bottom:8px;">🌿</div>
+          <h2 style="font-size:18px;font-weight:900;color:#1a3a2a;margin-bottom:4px;">Vitality Medicine of NY</h2>
+          <p style="font-size:12px;color:#4a6a57;margin-bottom:24px;">Labcorp Lab Referral — Staff Access</p>
+          <input id="passInput" type="password" placeholder="Enter password" style="width:100%;border:1.5px solid #b6d4c0;border-radius:8px;padding:10px 14px;font-size:14px;font-family:Lato,sans-serif;color:#1a3a2a;margin-bottom:12px;outline:none;">
+          <button onclick="checkPass()" style="width:100%;background:#1a6b3c;color:white;border:none;border-radius:8px;padding:11px;font-size:14px;font-weight:700;font-family:Lato,sans-serif;cursor:pointer;">Enter</button>
+          <p id="passErr" style="color:#dc2626;font-size:12px;margin-top:10px;display:none;">Incorrect password. Please try again.</p>
+        </div>`;
+      document.body.appendChild(overlay);
+      document.getElementById('passInput').addEventListener('keydown', e => { if (e.key === 'Enter') checkPass(); });
+    }
+  })();
+
+  function checkPass() {
+    const PASS = '2026';
+    const val = document.getElementById('passInput').value;
+    if (val === PASS) {
+      sessionStorage.setItem('vmny_auth', PASS);
+      document.getElementById('authOverlay').remove();
+    } else {
+      document.getElementById('passErr').style.display = 'block';
+      document.getElementById('passInput').value = '';
+      document.getElementById('passInput').focus();
+    }
+  }
+
+  // ── SIGNATURE CANVAS ─────────────────────────────────────────────
+  function initSigCanvas(id) {
+    const canvas = document.getElementById(id);
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.strokeStyle = '#1a3a2a';
+    ctx.lineWidth = 1.8;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    let drawing = false, lx = 0, ly = 0;
+    function getPos(e) {
+      const r = canvas.getBoundingClientRect();
+      const src = e.touches ? e.touches[0] : e;
+      return { x: (src.clientX - r.left) * (canvas.width / r.width), y: (src.clientY - r.top) * (canvas.height / r.height) };
+    }
+    canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); lx = p.x; ly = p.y; });
+    canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y); ctx.stroke(); lx = p.x; ly = p.y; });
+    canvas.addEventListener('mouseup', () => drawing = false);
+    canvas.addEventListener('mouseleave', () => drawing = false);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); lx = p.x; ly = p.y; }, { passive: false });
+    canvas.addEventListener('touchmove', e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(p.x, p.y); ctx.stroke(); lx = p.x; ly = p.y; }, { passive: false });
+    canvas.addEventListener('touchend', () => drawing = false);
+  }
+
+  function clearSig(id) {
+    const canvas = document.getElementById(id);
+    canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  }
+
+  // ── CHECKLIST ────────────────────────────────────────────────────
+  function toggle(el) { el.classList.toggle('checked'); updateCount(); }
+
+  function updateCount() {
+    const n = document.querySelectorAll('.checked').length;
+    document.getElementById('selCount').textContent = n + ' selected';
+    const fc = document.getElementById('footerCount');
+    fc.textContent = n + ' items selected';
+    fc.style.display = n > 0 ? 'inline-block' : 'none';
+  }
+
+  function selectAll() { document.querySelectorAll('.test-item, .icd-item').forEach(el => el.classList.add('checked')); updateCount(); }
+  function clearAll() { document.querySelectorAll('.test-item, .icd-item').forEach(el => el.classList.remove('checked')); updateCount(); }
+  function selectSection(group) { clearAll(); document.querySelectorAll(`[data-group="${group}"]`).forEach(el => el.classList.add('checked')); updateCount(); }
+
+  // ── INIT ─────────────────────────────────────────────────────────
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('refDate').value = today;
+  initSigCanvas('sigCanvasGopal');
+  initSigCanvas('sigCanvasOsborne');
+</script>
+</body>
+</html>
